@@ -1,0 +1,11 @@
+# Build files
+*.o
+*.d
+obj/
+bin/
+
+# Python files
+.mypy_cache/
+
+# Data
+data/
