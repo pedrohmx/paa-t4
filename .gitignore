@@ -8,4 +8,4 @@ bin/
 .mypy_cache/
 
 # Data
-data/
+#data/
