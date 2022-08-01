@@ -164,7 +164,7 @@ auto main(int argc, char *argv[]) -> int {
         }
     }
 
-    print_mat(mat, size);
+    //print_mat(mat, size);
 
     // write output file headers
     // std::ofstream ofs_output(str_out);
@@ -203,17 +203,17 @@ auto main(int argc, char *argv[]) -> int {
         auto floyd_warshall_t1 = clock::now();
         floyd_warshall(fmat, size);
         auto floyd_warshall_t2 = clock::now();
-        print_mat(fmat, size);
-        std::chrono::duration<double, std::nano> fw_span = floyd_warshall_t2 - floyd_warshall_t1;
-        cout << fw_span.count() << "ns" << endl;
+        //print_mat(fmat, size);
+        std::chrono::duration<double, std::milli> fw_span = floyd_warshall_t2 - floyd_warshall_t1;
+        cout << fw_span.count() << "ms" << endl;
 
         cout << "--- Dijkstra ---" << endl;
         auto dijkstra_t1 = clock::now();
         dijkstra_wrapper(mat, dmat, visited, size);
         auto dijkstra_t2 = clock::now();
-        print_mat(dmat, size);
-        std::chrono::duration<double, std::nano> d_span = dijkstra_t2 - dijkstra_t1;
-        cout << d_span.count() << "ns" << endl;
+        //print_mat(dmat, size);
+        std::chrono::duration<double, std::milli> d_span = dijkstra_t2 - dijkstra_t1;
+        cout << d_span.count() << "ms" << endl;
 
         // COLNAME | OTHERCOL
         // ofs_output   << 123
