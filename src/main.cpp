@@ -19,10 +19,11 @@ void print_mat(const int* const mat, size_t size) {
     }
 }
 
-void floyd_warshall(int *mat, const size_t &size) {
+void floyd_warshall(int *mat, const size_t &size, long &count) {
     for (size_t k = 0; k < size; ++k) {
         for (size_t i = 0; i < size; ++i) {
             for (size_t j = 0; j < size; ++j) {
+                count++;
                 if (mat[i*size+k] + mat[k*size+j] < mat[i*size+j]) {
                     mat[i*size+j] = mat[i*size+k] + mat[k*size+j];
                 }
@@ -47,7 +48,8 @@ void dijkstra(
     int  *dist,
     bool *visited,
     const int &src,
-    const size_t &size
+    const size_t &size,
+    long &count
 ) {
     // Initialize distances and visited
     for (size_t i = 0; i < size; ++i) {
@@ -62,6 +64,7 @@ void dijkstra(
         
 
         for (size_t v = 0; v < size; v++) {
+            count++;
             if (  !visited[v]
                 && og_mat[u*size+v]
                 && dist[u] != INF
@@ -77,7 +80,8 @@ void dijkstra_wrapper(
     int const *og_mat,
     int  *dmat,
     bool *visited,
-    const size_t &size
+    const size_t &size,
+    long &count
 ) {
     // Initialize
     int *dist;
@@ -89,7 +93,7 @@ void dijkstra_wrapper(
         // }
         // dist[i] = 0;
         // call dijkstra
-        dijkstra(og_mat, dist, visited, i, size);
+        dijkstra(og_mat, dist, visited, i, size, count);
     }
 }
 
@@ -167,9 +171,9 @@ auto main(int argc, char *argv[]) -> int {
     //print_mat(mat, size);
 
     // write output file headers
-    // std::ofstream ofs_output(str_out);
-    // ofs_output << "COLNAME | OTHERCOL" << endl;
-    // ofs_output << std::fixed;
+    std::ofstream ofs_output(str_out);
+    ofs_output << "SIZE | FW time | FW count | D time | D count" << endl;
+    ofs_output << std::fixed;
 
     // timing
     // using std::chrono::duration_cast;
@@ -200,25 +204,30 @@ auto main(int argc, char *argv[]) -> int {
         }
 
         cout << "--- Floyd Warshall ---" << endl;
+        long fw_count = 0;
         auto floyd_warshall_t1 = clock::now();
-        floyd_warshall(fmat, size);
+        floyd_warshall(fmat, size, fw_count);
         auto floyd_warshall_t2 = clock::now();
         //print_mat(fmat, size);
         std::chrono::duration<double, std::milli> fw_span = floyd_warshall_t2 - floyd_warshall_t1;
         cout << fw_span.count() << "ms" << endl;
 
         cout << "--- Dijkstra ---" << endl;
+        long d_count = 0;
         auto dijkstra_t1 = clock::now();
-        dijkstra_wrapper(mat, dmat, visited, size);
+        dijkstra_wrapper(mat, dmat, visited, size, d_count);
         auto dijkstra_t2 = clock::now();
         //print_mat(dmat, size);
         std::chrono::duration<double, std::milli> d_span = dijkstra_t2 - dijkstra_t1;
         cout << d_span.count() << "ms" << endl;
 
-        // COLNAME | OTHERCOL
-        // ofs_output   << 123
-        //     << " | " << 456
-        //     << endl;
+        // SIZE | FW time | FW count | D time | D count
+        ofs_output   << size
+            << " | " << fw_span.count()
+            << " | " << fw_count
+            << " | " << d_span.count()
+            << " | " << d_count
+            << endl;
     }
 
     return 0;
