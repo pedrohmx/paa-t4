@@ -102,7 +102,7 @@ auto main(int argc, char *argv[]) -> int {
     using std::cerr;
     using std::endl;
 
-    argparse::ArgumentParser program("paa-t4","0.0.1");
+    argparse::ArgumentParser program("paa-t4","1.0.0");
     
     program.add_argument("inputfile")
         //.help("File containing the data to build the trees")
