@@ -32,9 +32,10 @@ void floyd_warshall(int *mat, const size_t &size, long &count) {
     }
 }
 
-int min_distance_index(int *dist, bool *visited, const size_t &size) {
+int min_distance_index(int *dist, bool *visited, long &count, const size_t &size) {
     int min = INF, min_index;
     for (size_t i = 0; i < size; ++i) {
+        count++;
         if (visited[i] == false && dist[i] <= min) {
             min = dist[i];
             min_index = i;
@@ -59,7 +60,7 @@ void dijkstra(
     // distance to self
     dist[src] = 0;
     for (size_t i = 0; i < size-1; ++i) {
-        int u = min_distance_index(dist, visited, size);
+        int u = min_distance_index(dist, visited, count, size);
         visited[u] = true;
         
 
@@ -87,11 +88,6 @@ void dijkstra_wrapper(
     int *dist;
     for (size_t i = 0; i < size; ++i) {
         dist = dmat + (size * i);
-        // for (size_t j = 0; j < size; ++j) {
-        //     visited[j] = false;
-        //     dist[j] = INF;
-        // }
-        // dist[i] = 0;
         // call dijkstra
         dijkstra(og_mat, dist, visited, i, size, count);
     }
@@ -102,7 +98,7 @@ auto main(int argc, char *argv[]) -> int {
     using std::cerr;
     using std::endl;
 
-    argparse::ArgumentParser program("paa-t4","1.0.0");
+    argparse::ArgumentParser program("paa-t4","1.0.1");
     
     program.add_argument("inputfile")
         //.help("File containing the data to build the trees")
@@ -184,12 +180,6 @@ auto main(int argc, char *argv[]) -> int {
     // run tests
     for (int r = 0; r < runs; r++) {
         cout << "Running [" << r+1 << '/' << runs << "]" << endl; //cout.flush();
-
-        // Init
-        // prepare dijkstra matrix
-        // for (size_t i = 0; i < len; i++) {
-        //     dmat[i] = mat[i];
-        // }
 
         // prepare floyd-warshall matrix
         for (size_t i = 0; i < size; i++) {
